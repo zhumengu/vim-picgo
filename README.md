@@ -48,10 +48,15 @@ nmap <silent> <leader>u :PicGoClip<cr>
 " url  : 上传成功返回的图床图片地址
 " src  : 使用何种方式上传，值为 'clipboard' 或者 'file'
 " fname: 上传本地文件路径
-function! upload_succ(url, src, fname)
-  if &filetype == "html"
-    call append(line('$'), '<a href="' . a:url . '">' . a:fname . '</a>')
+function! s:upload_succ(url, src, fname)
+  if matchstr(&filetype, 'html') != ''
+    call append(line('.'), '<img src="' . a:url . '" alt="' . a:fname . '"/>')
+  elseif matchstr(&filetype, 'markdown') != ''
+    call append(line('.'), '![pic](' . a:url . ')')
+  else
+    call append(line('.'), a:url)
   endif
+  echomsg 'picgo: Upload successfully'
 endfunction
 
 let g:picgo_handler = {
